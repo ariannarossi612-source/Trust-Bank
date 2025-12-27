@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Trust Bank – Admin</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h3>Trust Bank – Admin</h3>
+
+<div class="card">
+  <p>VISA</p>
+  <h4>**** **** **** 4021</h4>
+  <p>Balance</p>
+  <h2>$<span id="balance">0.00</span></h2>
+</div>
+
+<h4>Transfer Requests</h4>
+<ul id="requests"></ul>
+
+<button onclick="logout()">Logout</button>
+
+<script type="module" src="firebase.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
