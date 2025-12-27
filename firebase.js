@@ -3,7 +3,7 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth
 import { getFirestore } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCwjKTzj_1azYihm7jYxFYuIoM5OOFwZ58",
+  apiKey: "YOUR_API_KEY",
   authDomain: "trust-bank-11868.firebaseapp.com",
   projectId: "trust-bank-11868",
   storageBucket: "trust-bank-11868.appspot.com",
