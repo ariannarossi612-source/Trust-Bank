@@ -1,23 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Trust Bank – Dashboard</title>
+  <title>Trust Bank – Client</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h2 id="welcome">Welcome</h2>
+<h3>Trust Bank</h3>
 
-<p>Balance: ₦<span id="balance">0.00</span></p>
+<div class="card">
+  <p>VISA</p>
+  <h4>**** **** **** 4021</h4>
+  <p>Balance</p>
+  <h2>$<span id="balance">0.00</span></h2>
+</div>
 
-<input type="number" id="amount" placeholder="Transfer amount">
-<button onclick="transfer()">Transfer</button>
+<p>Daily limit: $50,600</p>
 
-<p id="message"></p>
+<input id="amount" placeholder="Amount">
+<button onclick="requestTransfer()">Transfer</button>
+
+<p id="status"></p>
 
 <button onclick="logout()">Logout</button>
 
 <script type="module" src="firebase.js"></script>
-<script type="module" src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
