@@ -1,7 +1,7 @@
 Trust-Bank/
 │
-├── index.html        (login)
-├── dashboard.html    (main app)
+├── index.html
+├── dashboard.html
 ├── style.css
 ├── firebase.js
 └── app.js
