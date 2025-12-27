@@ -1,60 +1,89 @@
-// 1️⃣ Firebase Config (already added)
+// Firebase Config
 const firebaseConfig = {
-  apiKey: "xxxx",
+  apiKey: "AIzaSyCwjKTzj_1azYihm7jYxFYuIoM5OOFwZ58",
   authDomain: "trust-bank-11868.firebaseapp.com",
   projectId: "trust-bank-11868",
-  storageBucket: "trust-bank-11868.appspot.com",
-  messagingSenderId: "xxxx",
-  appId: "xxxx"
+  storageBucket: "trust-bank-11868.firebasestorage.app",
+  messagingSenderId: "351989319032",
+  appId: "1:351989319032:web:7c7c413a80895cb8ef748d",
+  measurementId: "G-RE3JFD6WQJ"
 };
 firebase.initializeApp(firebaseConfig);
 
-// 2️⃣ Firebase Services
+// Firebase Services
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// 3️⃣ Login button
-document.getElementById('login-btn').addEventListener('click', async function() {
-  const email = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
+// Elements
+const loginSection = document.getElementById('login-section');
+const dashboard = document.getElementById('dashboard');
+const emailInput = document.getElementById('email');
+const passwordInput = document.getElementById('password');
+const loginBtn = document.getElementById('login-btn');
+const logoutBtn = document.getElementById('logout-btn');
+const balanceEl = document.getElementById('balance');
+const userNameEl = document.getElementById('user-name');
+const addFundsBtn = document.getElementById('add-funds-btn');
+const cardNameEl = document.getElementById('card-name');
+const cardBalanceEl = document.getElementById('card-balance');
+const transferBtn = document.getElementById('transfer-btn');
 
-  try {
-    // Login or create user
-    let userCredential = await auth.signInWithEmailAndPassword(email, password);
+// Predefined Admin
+const ADMIN_EMAIL = "admin@trustbank.app";
+const ADMIN_PASSWORD = "TBadmin123";
 
-    // Hide login, show balance
-    document.getElementById('login-section').style.display = 'none';
-    document.getElementById('balance-section').style.display = 'block';
+// Login Function
+loginBtn.addEventListener('click', () => {
+  const email = emailInput.value;
+  const password = passwordInput.value;
 
-    // Load balance from Firestore
-    const docRef = db.collection('bank').doc('main');
-    const doc = await docRef.get();
-    if (doc.exists) {
-      document.getElementById('balance').innerText = doc.data().amount.toFixed(2);
-    }
+  auth.signInWithEmailAndPassword(email, password)
+    .then(async (userCredential) => {
+      loginSection.style.display = 'none';
+      dashboard.style.display = 'block';
 
-    // Show admin features if admin
-    if (userCredential.user.email === "admin@trustbank.app") {
-      const addButton = document.createElement('button');
-      addButton.innerText = "Add $1000";
-      addButton.addEventListener('click', async () => {
-        await docRef.update({
-          amount: firebase.firestore.FieldValue.increment(1000)
+      const user = userCredential.user;
+      userNameEl.innerText = email.split("@")[0];
+      cardNameEl.innerText = email.split("@")[0];
+
+      // Firestore: get or create balance document
+      const docRef = db.collection('users').doc(user.uid);
+      const doc = await docRef.get();
+      if (!doc.exists) {
+        await docRef.set({ balance: 0 });
+      }
+      const snapshot = await docRef.get();
+      const balance = snapshot.data().balance;
+      balanceEl.innerText = balance.toFixed(2);
+      cardBalanceEl.innerText = balance.toFixed(2);
+
+      // Show add funds only for admin
+      if(email === ADMIN_EMAIL) {
+        addFundsBtn.style.display = 'inline-block';
+        addFundsBtn.addEventListener('click', async () => {
+          await docRef.update({
+            balance: firebase.firestore.FieldValue.increment(1000)
+          });
+          const updated = await docRef.get();
+          balanceEl.innerText = updated.data().balance.toFixed(2);
+          cardBalanceEl.innerText = updated.data().balance.toFixed(2);
         });
-        const updatedDoc = await docRef.get();
-        document.getElementById('balance').innerText = updatedDoc.data().amount.toFixed(2);
-      });
-      document.getElementById('balance-section').appendChild(addButton);
-    }
-
-  } catch (error) {
-    alert("Login failed: " + error.message);
-  }
+      }
+    })
+    .catch((err) => alert(err.message));
 });
 
-// 4️⃣ Logout button
-document.getElementById('logout-btn').addEventListener('click', function() {
-  auth.signOut();
-  document.getElementById('login-section').style.display = 'block';
-  document.getElementById('balance-section').style.display = 'none';
+// Logout Function
+logoutBtn.addEventListener('click', () => {
+  auth.signOut().then(() => {
+    dashboard.style.display = 'none';
+    loginSection.style.display = 'block';
+    emailInput.value = "";
+    passwordInput.value = "";
+  });
+});
+
+// Transfer Button
+transferBtn.addEventListener('click', () => {
+  alert("Unable to transfer");
 });
