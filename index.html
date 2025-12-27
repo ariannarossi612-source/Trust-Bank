@@ -1,52 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trust Bank</title>
+  <title>Trust Bank – Login</title>
   <link rel="stylesheet" href="style.css">
-
-  <!-- Firebase Compat Scripts -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
-  <!-- Login Section -->
-  <div id="login-section">
-    <h1>Trust Bank</h1>
-    <input type="email" id="email" placeholder="Email">
-    <input type="password" id="password" placeholder="Password">
-    <button id="login-btn">Login</button>
-  </div>
+<h2>Trust Bank Login</h2>
 
-  <!-- Bank Dashboard -->
-  <div id="dashboard" style="display:none;">
-    <h2>Hello, <span id="user-name"></span></h2>
-    <h3>Balance: $<span id="balance">0.00</span></h3>
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Password">
+<button onclick="login()">Login</button>
 
-    <!-- Visa Card Display -->
-    <div id="card">
-      <p>Trust Bank</p>
-      <p>Card: **** **** **** 1234</p>
-      <p>Name: <span id="card-name"></span></p>
-      <p>Balance: $<span id="card-balance">0.00</span></p>
-    </div>
-
-    <!-- Admin Add Funds -->
-    <button id="add-funds-btn" style="display:none;">Add $1000</button>
-
-    <!-- Transfer -->
-    <h3>Transfer</h3>
-    <input type="number" id="transfer-amount" placeholder="Amount">
-    <input type="text" id="transfer-bank" placeholder="Bank Name">
-    <button id="transfer-btn">Transfer</button>
-
-    <!-- Logout -->
-    <button id="logout-btn">Logout</button>
-  </div>
-
-  <script src="script.js"></script>
+<script type="module" src="firebase.js"></script>
+<script type="module" src="app.js"></script>
 </body>
 </html>
