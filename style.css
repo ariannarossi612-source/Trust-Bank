@@ -1,6 +1,16 @@
 body {
   font-family: Arial;
+  background: #f4f6fa;
   padding: 20px;
+}
+
+.card {
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 300px;
+  margin-bottom: 20px;
 }
 
 input, button {
