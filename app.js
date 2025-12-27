@@ -1,60 +1,75 @@
-import { auth } from "./firebase.js";
-import {
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
-
 const DAILY_LIMIT = 50600;
-let balance = 0;
-let dailyUsed = 0;
+let balance = 50600;
+
+// Users
+const ADMIN_EMAIL = "admin@trustbank.app";
+const CLIENT_EMAIL = "Henry@trustbank.app";
 
 // LOGIN
-window.login = function () {
+function login() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  signInWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      window.location.href = "dashboard.html";
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(user => {
+      if (email === ADMIN_EMAIL) {
+        window.location = "admin.html";
+      } else if (email === CLIENT_EMAIL) {
+        window.location = "dashboard.html";
+      } else {
+        alert("Unauthorized user");
+        firebase.auth().signOut();
+      }
     })
     .catch(err => alert(err.message));
-};
+}
 
-// CHECK LOGIN
-onAuthStateChanged(auth, user => {
-  if (user && document.getElementById("welcome")) {
-    document.getElementById("welcome").innerText =
-      "Hello, " + user.email;
-    document.getElementById("balance").innerText = balance.toFixed(2);
-  }
-});
-
-// TRANSFER
-window.transfer = function () {
+// CLIENT TRANSFER REQUEST
+function requestTransfer() {
   const amount = Number(document.getElementById("amount").value);
-  const message = document.getElementById("message");
+  const status = document.getElementById("status");
 
   if (amount <= 0) {
-    message.innerText = "Invalid amount";
+    status.innerText = "Invalid amount";
     return;
   }
 
-  if (dailyUsed + amount > DAILY_LIMIT) {
-    message.innerText = "Daily limit ₦50,600 exceeded";
+  if (amount > DAILY_LIMIT) {
+    status.innerText = "Daily limit $50,600 exceeded";
     return;
   }
 
-  dailyUsed += amount;
-  balance -= amount;
+  status.innerText = "Available for transfer (Pending admin approval)";
+  addRequestToAdmin(amount);
+}
 
-  document.getElementById("balance").innerText = balance.toFixed(2);
-  message.innerText = "Transfer successful";
-};
+// SEND REQUEST TO ADMIN LIST
+function addRequestToAdmin(amount) {
+  const requestsList = document.getElementById("requests");
+  if (!requestsList) return; // Only admin page has this
+
+  const li = document.createElement("li");
+  li.innerText = `$${amount.toFixed(2)} - Pending`;
+  const approveBtn = document.createElement("button");
+  approveBtn.innerText = "Approve";
+  approveBtn.onclick = () => {
+    balance -= amount;
+    document.getElementById("balance").innerText = balance.toFixed(2);
+    li.innerText = `$${amount.toFixed(2)} - Approved`;
+  };
+  li.appendChild(approveBtn);
+  requestsList.appendChild(li);
+}
 
 // LOGOUT
-window.logout = function () {
-  signOut(auth).then(() => {
-    window.location.href = "index.html";
+function logout() {
+  firebase.auth().signOut().then(() => {
+    window.location = "index.html";
   });
-};
+}
+
+// EXPORT FOR HTML BUTTONS
+window.login = login;
+window.logout = logout;
+window.requestTransfer = requestTransfer;
+window.approveTransfer = addRequestToAdmin;
